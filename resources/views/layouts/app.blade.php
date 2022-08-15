@@ -12,14 +12,9 @@
     
 </head>
 <body class="mb-0 page-top">
-    <div id="wrapper">
-        @auth
-            @include('layouts.sidebar')
-        @endauth
-        @yield('content')
-    </div>
+    @yield('content')
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
-    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
-</html
+</html>
