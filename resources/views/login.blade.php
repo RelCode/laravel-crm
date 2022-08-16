@@ -23,7 +23,7 @@
                                         <div class="form-group mb-3">
                                             <input type="text" name="email" class="form-control form-control-user @error('email') border-danger @enderror"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                placeholder="Enter Email Address..." value="{{ old('email') }}">
                                                 @error('email')
                                                     <span class="text text-danger">{{ $message }}</span>
                                                 @enderror
@@ -46,7 +46,9 @@
                                             Login
                                         </button>
                                         @error('status')
-                                            <span class="text text-danger mt-3 h4">{{ $message }}</span>
+                                            <div class="text-center pt-2">
+                                                <span class="text text-danger h4">{{ $message }}</span>
+                                            </div>
                                         @enderror
                                     </form>
                                     <hr>

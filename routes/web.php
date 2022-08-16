@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LeadsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 
@@ -19,6 +20,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/', function () {
         return view('home');
     })->name('/');
+    Route::get('/leads',[LeadsController::class,'index'])->name('leads');
+    Route::get('/leads/create',[LeadsController::class,'create'])->name('leads.create');
+    Route::post('/leads/create',[LeadsController::class,'store']);
 });
 
 Route::get('/login',[LoginController::class,'index'])->name('login');
