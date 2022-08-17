@@ -12,15 +12,45 @@
                         <a href="{{ route('leads.create') }}" class="btn btn-primary" title="Create New Lead"><i class="fa fa-plus"></i></a>
                     </div>
                     <div class="row">
-                        <div class="table-responsive">
+                        @if ($leads->count() > 0)
+                        <div class="table-responsive pt-3">
                             <table class="table table-bordered table-stripped table-hover">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>Names</th>
+                                        <th>Profession</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Created By</th>
+                                        <th>Stage</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    @foreach ($leads as $lead)
+                                        <tr>
+                                            <th>{{$lead->names}}</th>
+                                            <th>{{$lead->profession}}</th>
+                                            <th>{{$lead->email}}</th>
+                                            <th>{{$lead->phone}}</th>
+                                            <th>{{preg_replace('/(?<=\w)./', ' ', $lead->creator)}}</th>
+                                            <th>{{$lead->current_stage}}</th>
+                                            <th>
+                                                <a href="{{ route('leads.action',$lead->id) }}" class="btn btn-primary p-2"><i class="fa fa-cog"></i></a>
+                                                <a href="{{ route('leads.edit',$lead->id) }}" class="btn btn-warning p-2"><i class="fa fa-edit"></i></a>
+                                                <button type="button" class="btn btn-danger p-2" onclick="swalConfirm('delete','{{$lead->names}}')"><i class="fa fa-trash"></i></button>
+                                            </th>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
+                            {{ $leads->links() }}
                         </div>
+                        @else
+                            <div class="col-xs-12 col-md-6 offset-md-3">
+                                <p class="h4 text-secondary">You Have No Leads, <a href="{{ route('leads.create') }}" class="text-primary">Create One</a></p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

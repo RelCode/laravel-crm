@@ -23,6 +23,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/leads',[LeadsController::class,'index'])->name('leads');
     Route::get('/leads/create',[LeadsController::class,'create'])->name('leads.create');
     Route::post('/leads/create',[LeadsController::class,'store']);
+    Route::get('/leads/action/{id}',[LeadsController::class,'action'])->name('leads.action');
+    Route::get('/leads/edit/{id}',[LeadsController::class,'edit'])->name('leads.edit');
+    Route::post('/leads/edit/{id}',[LeadsController::class,'update']);
 });
 
 Route::get('/login',[LoginController::class,'index'])->name('login');
