@@ -57,20 +57,6 @@
                                             id="phone" aria-describedby="enter lead's contact number" value="{{ old('phone') ?? $lead[0]->phone }}">
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="stage" class="form-label mb-0 d-flex justify-content-between">
-                                            Select Stage
-                                            @error('stage')
-                                                <span class="text text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </label>
-                                        <select name="stage" id="stage" class="form-control @error('stage') border-danger @enderror" aria-describedby="select lead current stage">
-                                            <option value=""></option>
-                                            @foreach ($stages as $stage)
-                                                <option value="{{ $stage->id }}" {{$lead[0]->stage == $stage->id ? 'selected' : ''}}>{{ $stage->stage }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group mb-3">
                                         <button type="submit" class="btn btn-primary form-control">Submit</button>
                                     </div>
                                 </form>

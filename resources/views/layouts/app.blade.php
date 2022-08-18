@@ -8,8 +8,12 @@
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
     {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}" media="all"> --}}
     <link rel="stylesheet" href="{{ asset('css/sb-admin-2.min.css') }}" media="all">
-
-    
+    <style>
+        .toggle-options {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
 <body class="mb-0 page-top">
     @yield('content')

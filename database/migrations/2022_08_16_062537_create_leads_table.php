@@ -20,7 +20,7 @@ class CreateLeadsTable extends Migration
             $table->string('email',255);
             $table->string('phone',32)->nullable();
             $table->string('owner',255);
-            $table->string('stage',32);
+            $table->string('stage',32)->default('1');//1 == New (Lead)
             $table->softDeletes();
             $table->timestamps();
         });

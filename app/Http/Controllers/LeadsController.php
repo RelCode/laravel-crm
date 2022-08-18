@@ -19,21 +19,20 @@ class LeadsController extends Controller
             ->join('stages','leads.stage','stages.id')
             ->join('users','leads.owner','users.id')
             ->select('leads.*','stages.stage as current_stage','users.name as creator')
+            ->orderBy('leads.created_at','desc')
             ->paginate(5);
         return view('leads.list',['leads' => $leads]);
     }
     
     public function create(){
-        $stages = $this->getStages();
-        return view('leads.create',['stages' => $stages]);
+        return view('leads.create');
     }
 
     public function store(Request $request){
         $this->validate($request,[
             'names' => 'required',
             'profession' => 'required',
-            'email' => 'required|email|unique:leads,email',
-            'stage' => 'required'
+            'email' => 'required|email|unique:leads,email'
         ]);
 
         //
@@ -45,7 +44,6 @@ class LeadsController extends Controller
         $lead->email = $request->email;
         $lead->phone = $request->phone;
         $lead->owner = auth()->user()->id;
-        $lead->stage = $request->stage;
         if($lead->save()){
             Alert::success('done','new lead created');
             return back();
@@ -55,7 +53,6 @@ class LeadsController extends Controller
     }
 
     public function edit($id){
-        $stages = $this->getStages();
         $lead = DB::table('leads')
             ->where('leads.owner', auth()->user()->id)
             ->where('leads.id', $id)
@@ -63,7 +60,7 @@ class LeadsController extends Controller
             ->join('users', 'leads.owner', 'users.id')
             ->select('leads.*', 'stages.stage as current_stage', 'users.name as creator')
             ->get();
-        return view('leads.edit',['lead' => $lead,'stages' => $stages]);
+        return view('leads.edit',['lead' => $lead]);
     }
 
     public function update(Request $request, $id){
@@ -72,12 +69,16 @@ class LeadsController extends Controller
             'names' => 'required',
             'profession' => 'required',
             'email' => ['required','email',Rule::unique('leads')->ignore($id)],//the rule ensure the email does not belong to anyone if a different email has been inserted
-            'stage' => 'required'
         ]);
         $lead = Leads::find($id);
         //check if user with the ID submitted exists
         if($lead == null){
             Alert::warning('warning','action failed');
+            return back();
+        }
+        //check if admin is updating a lead he/she owns
+        if($lead->owner != auth()->user()->id){
+            Alert::warning('error','you don\'t have privileges to perform this action');
             return back();
         }
         //update the 
@@ -86,9 +87,8 @@ class LeadsController extends Controller
         $lead->email = $request->email;
         $lead->phone = $request->phone;
         $lead->owner = auth()->user()->id;
-        $lead->stage = $request->stage;
         if ($lead->save()) {
-            Alert::success('done', 'lead info updated');
+            Alert::success('done', $lead->names . ' info was updated');
             return back();
         }
         Alert::error('failed', 'error occured. try again or contact admin');
@@ -114,6 +114,7 @@ class LeadsController extends Controller
             ->get();
         if($lead->count() == 0){
             Alert::warning('error','you don\'t have privileges to perform this action');
+            return back();
         }
         //update soft delete
         $affected = DB::table('leads')
@@ -126,6 +127,55 @@ class LeadsController extends Controller
         }
         Alert::error('error','action failed. try again');
         return back();
+    }
+
+    public function action($id){
+        $lead = DB::table('leads')
+            ->where('id', $id)
+            ->where('owner', auth()->user()->id)
+            ->get();
+        if($lead->count() == 0){
+            Alert::info('error','selected user does not exist');
+            return back();
+        }
+        $stages = $this->getStages();
+        return view('leads.action',['lead' => $lead[0],'stages' => $stages]);
+    }
+
+    public function handle(Request $request, $id){
+        if(isset($request->stage)){
+            //handling stage update function
+            $this->handleStageUpdate($request,$id);
+            return back();
+        }
+    }
+
+    public function handleStageUpdate($request,$id){
+        $stage = DB::table('stages')->where('id',$request->stage)->get();
+        if($stage->count() == 0){
+            Alert::info('error','invalid stage selected');
+            return false;
+        }
+        //check if the current user should be having this lead's ID
+        $lead = DB::table('leads')
+            ->where('id', $id)
+            ->where('owner', auth()->user()->id)
+            ->get();
+        if ($lead->count() == 0) {
+            Alert::warning('error', 'you don\'t have privileges to perform this action');
+            return false;
+        }
+        //else update the lead
+        $affected = DB::table('leads')
+            ->where('id', $id)
+            ->where('owner', auth()->user()->id)
+            ->update(['stage' => $request->stage]);
+        if ($affected == 1) {
+            Alert::success('done', $lead[0]->names . ' process stage has changed');
+            return true;
+        }
+        Alert::error('error', 'action failed. try again');
+        return false;
     }
 
     private function getStages(){
