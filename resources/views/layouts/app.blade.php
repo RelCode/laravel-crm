@@ -18,27 +18,6 @@
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    <script>
-        function swalConfirm(action,item){
-            new Swal({
-                title: 'are you sure?',
-                text: action + ' ' + item,
-                icon: 'info',
-                showConfirmButton: true,
-                confirmButtonText: 'Yes',
-                confirmButtonColor: 'red',
-                showCancelButton: true,
-                cancelButtonText: 'No',
-            }).then((isConfirmed) => {
-                if(isConfirmed){
-                    alert('confirmed')
-                }else{
-                    close();
-                }
-            });
-            // swal('title','text','icon')
-        }
-    </script>
     @include('sweetalert::alert')
 </body>
 </html>

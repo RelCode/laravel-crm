@@ -9,7 +9,9 @@
                 <div id="crm-content-container" class="container">
                     <div class="d-flex justify-content-between pt-2">
                         <h4 class="text text-primary">Leads</h4>
-                        <a href="{{ route('leads.create') }}" class="btn btn-primary" title="Create New Lead"><i class="fa fa-plus"></i></a>
+                        <div>
+                            <a href="{{ route('leads.create') }}" class="btn btn-primary" title="Create New Lead"><i class="fa fa-plus"></i></a>  <a href="/trash" class="btn btn-danger" title="View Deleted Leads"><i class="fa fa-trash"></i></a>
+                        </div>
                     </div>
                     <div class="row">
                         @if ($leads->count() > 0)
@@ -27,7 +29,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($leads as $lead)
+                                    @foreach ($leads as $index => $lead)
                                         <tr>
                                             <th>{{$lead->names}}</th>
                                             <th>{{$lead->profession}}</th>
@@ -38,7 +40,10 @@
                                             <th>
                                                 <a href="{{ route('leads.action',$lead->id) }}" class="btn btn-primary p-2"><i class="fa fa-cog"></i></a>
                                                 <a href="{{ route('leads.edit',$lead->id) }}" class="btn btn-warning p-2"><i class="fa fa-edit"></i></a>
-                                                <button type="button" class="btn btn-danger p-2" onclick="swalConfirm('delete','{{$lead->names}}')"><i class="fa fa-trash"></i></button>
+                                                    @csrf
+                                                    <button type="button" data-user="{{$lead->id}}" class="btn btn-danger delete-lead p-2">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
                                             </th>
                                         </tr>
                                     @endforeach

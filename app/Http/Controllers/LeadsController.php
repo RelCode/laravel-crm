@@ -15,6 +15,7 @@ class LeadsController extends Controller
         //fetch all leads that are owned by this admin
         $leads = DB::table('leads')
             ->where('owner',auth()->user()->id)
+            ->where('deleted_at',null)
             ->join('stages','leads.stage','stages.id')
             ->join('users','leads.owner','users.id')
             ->select('leads.*','stages.stage as current_stage','users.name as creator')
@@ -91,6 +92,39 @@ class LeadsController extends Controller
             return back();
         }
         Alert::error('failed', 'error occured. try again or contact admin');
+        return back();
+    }
+
+    public function destroy(Request $request){
+        $user = isset($_GET['userId']) ? htmlentities($_GET['userId'],ENT_QUOTES) : '';//get parameterized user id
+        $token = isset($_GET['_token']) ? htmlentities($_GET['_token'],ENT_QUOTES) : '';//get parameterized session token
+        if($user == '' || $token == ''){//check if the id & token are provided
+            Alert::error('error','action failed');
+            return back();
+        }
+        //check if the token matches the session
+        if($token != session('_token')){
+            Alert::error('error','invalid action');
+            return back();
+        }
+        //check if the current user should be having this lead's ID
+        $lead = DB::table('leads')
+            ->where('id',$user)
+            ->where('owner',auth()->user()->id)
+            ->get();
+        if($lead->count() == 0){
+            Alert::warning('error','you don\'t have privileges to perform this action');
+        }
+        //update soft delete
+        $affected = DB::table('leads')
+            ->where('id',$user)
+            ->where('owner',auth()->user()->id)
+            ->update(['deleted_at' => date('Y-m-d H:i:s')]);
+        if($affected == 1){
+            Alert::success('done',$lead[0]->names . ' is deleted from the system');
+            return back();
+        }
+        Alert::error('error','action failed. try again');
         return back();
     }
 

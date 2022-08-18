@@ -21,6 +21,7 @@ class CreateLeadsTable extends Migration
             $table->string('phone',32)->nullable();
             $table->string('owner',255);
             $table->string('stage',32);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
