@@ -1,7 +1,12 @@
 var navHeight = document.getElementsByTagName('nav')[0].clientHeight;
+console.log(document.getElementsByTagName('nav')[0].clientHeight)
 var sideWidth = document.getElementsByClassName('sidebar')[0].clientWidth;
-document.querySelector('#crm-content-container').style.height = 'calc(100% - '+navHeight+'px)';
 // document.querySelector('#crm-content-container').style.width = 'calc(100% - '+sideWidth+'px)';
+
+// var mainContainer = document.querySelector('#crm-content-container');
+var container = document.querySelector('#crm-content-container').children[0].clientHeight;
+document.querySelector('#main-row').style.height = 'calc(100% - '+container+'px)';
+// alert(document.getElementsByTagName('body')[0].offsetHeight);
 
 $(document).on('click','.delete-lead',function(event){
     event.preventDefault()

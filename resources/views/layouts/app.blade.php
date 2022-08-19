@@ -6,12 +6,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laravel CRM</title>
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}" media="all"> --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" media="all">
     <link rel="stylesheet" href="{{ asset('css/sb-admin-2.min.css') }}" media="all">
     <style>
+        html,body{
+            height: 100% !important;
+        }
+        #wrapper {
+            height: 100% !important;
+        }
+        #wrapper #content-wrapper {
+            height: 100% !important;
+        }
+        #wrapper #content-wrapper #content {
+            height: 100% !important;
+        }
+        .sidebar {
+            height: 100% !important;
+        }
         .toggle-options {
             display: flex;
             align-items: center;
+        }
+        #main-row {
+            overflow-y: auto;
         }
     </style>
 </head>

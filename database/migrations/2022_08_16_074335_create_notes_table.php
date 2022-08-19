@@ -16,8 +16,10 @@ class CreateNotesTable extends Migration
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->string('creator',255)->comment('refers to the admin that created the note');
-            $table->string('lead_id',16);
-            $table->text('note');
+            $table->string('lead',16);
+            $table->string('title',128);
+            $table->text('body');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

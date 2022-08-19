@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Leads;
+use App\Models\Notes;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -133,13 +134,18 @@ class LeadsController extends Controller
         $lead = DB::table('leads')
             ->where('id', $id)
             ->where('owner', auth()->user()->id)
+            ->where('deleted_at',null)
             ->get();
         if($lead->count() == 0){
             Alert::info('error','selected user does not exist');
             return back();
         }
+        $notes = DB::table('notes')
+            ->where('creator', auth()->user()->id)
+            ->where('lead', $id)
+            ->get();
         $stages = $this->getStages();
-        return view('leads.action',['lead' => $lead[0],'stages' => $stages]);
+        return view('leads.action',['lead' => $lead[0],'notes' => $notes,'stages' => $stages]);
     }
 
     public function handle(Request $request, $id){
@@ -147,11 +153,21 @@ class LeadsController extends Controller
             //handling stage update function
             $this->handleStageUpdate($request,$id);
             return back();
+        }elseif(isset($request->notes)){
+            //handling the note taking function
+            $this->handleNotes($request,$id);
+            return back();
+        }else{
+            Alert::error('error','invalid action');
+            return back();
         }
     }
 
     public function handleStageUpdate($request,$id){
-        $stage = DB::table('stages')->where('id',$request->stage)->get();
+        $stage = DB::table('stages')
+            ->where('id',$request->stage)
+            ->get();
+        //check if the provided stage value exists
         if($stage->count() == 0){
             Alert::info('error','invalid stage selected');
             return false;
@@ -175,6 +191,34 @@ class LeadsController extends Controller
             return true;
         }
         Alert::error('error', 'action failed. try again');
+        return false;
+    }
+
+    public function handleNotes($request,$id){
+        //validate user input
+        $this->validate($request,[
+            'title' => 'required|max:128',
+            'body' => 'required|max:512'
+        ]);
+        //check if the current user should be having this lead's ID
+        $lead = DB::table('leads')
+            ->where('id', $id)
+            ->where('owner', auth()->user()->id)
+            ->get();
+        if ($lead->count() == 0) {
+            Alert::warning('error', 'you don\'t have privileges to perform this action');
+            return back();
+        }
+        $note = new Notes();
+        $note->creator = auth()->user()->id;
+        $note->lead = htmlentities($id,ENT_QUOTES);
+        $note->title = $request->title;
+        $note->body = $request->body;
+        if($note->save()){
+            Alert::success('done','notes successfully added');
+            return true;
+        }
+        Alert::error('error','action failed. try again');
         return false;
     }
 
