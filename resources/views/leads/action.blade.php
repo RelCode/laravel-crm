@@ -22,8 +22,10 @@
                                         <button type="submit" name="stage" value="{{$stage->id}}" class="btn btn-primary {{$stage->id == $lead->stage ? 'active' : ''}}">
                                             {{$stage->stage}}
                                         </button>
-                                    @endforeach
-                                </div>
+                                        <input type="hidden" name="{{$stage->id}}" value="{{ $stage->stage }}">
+                                        @endforeach
+                                    </div>
+                                    <input type="hidden" name="current" value="{{ $lead->current_stage }}">
                             </form>
                         </div>
                         <div class="col-xs-12 col-md-7">

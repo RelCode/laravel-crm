@@ -132,9 +132,11 @@ class LeadsController extends Controller
 
     public function action($id){
         $lead = DB::table('leads')
-            ->where('id', $id)
-            ->where('owner', auth()->user()->id)
-            ->where('deleted_at',null)
+            ->join('stages','leads.stage','stages.id')
+            ->where('leads.id', $id)
+            ->where('leads.owner', auth()->user()->id)
+            ->where('leads.deleted_at',null)
+            ->select('leads.*','stages.stage as current_stage')
             ->get();
         if($lead->count() == 0){
             Alert::info('error','selected user does not exist');
@@ -143,6 +145,7 @@ class LeadsController extends Controller
         $notes = DB::table('notes')
             ->where('creator', auth()->user()->id)
             ->where('lead', $id)
+            ->orderBy('created_at', 'desc')
             ->get();
         $stages = $this->getStages();
         return view('leads.action',['lead' => $lead[0],'notes' => $notes,'stages' => $stages]);
@@ -187,6 +190,7 @@ class LeadsController extends Controller
             ->where('owner', auth()->user()->id)
             ->update(['stage' => $request->stage]);
         if ($affected == 1) {
+            $this->saveNotes($id,'Lead Stage Changed','from <strong>' . $request->current . '</strong> to <strong>' . $request[(int)$request->stage] . '</strong>');
             Alert::success('done', $lead[0]->names . ' process stage has changed');
             return true;
         }
@@ -209,16 +213,20 @@ class LeadsController extends Controller
             Alert::warning('error', 'you don\'t have privileges to perform this action');
             return back();
         }
+        $this->saveNotes($id,$request->title,$request->body);
+    }
+
+    public function saveNotes($id,$title,$body){
         $note = new Notes();
         $note->creator = auth()->user()->id;
-        $note->lead = htmlentities($id,ENT_QUOTES);
-        $note->title = $request->title;
-        $note->body = $request->body;
-        if($note->save()){
-            Alert::success('done','notes successfully added');
+        $note->lead = htmlentities($id, ENT_QUOTES);
+        $note->title = $title;
+        $note->body = $body;
+        if ($note->save()) {
+            Alert::success('done', 'notes successfully added');
             return true;
         }
-        Alert::error('error','action failed. try again');
+        Alert::error('error', 'action failed. try again');
         return false;
     }
 
