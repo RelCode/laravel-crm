@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LeadsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
@@ -29,6 +30,11 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/leads/delete',[LeadsController::class,'destroy'])->name('leads.delete');
     Route::get('/leads/action/{id}',[LeadsController::class,'action'])->name('leads.action');
     Route::post('/leads/action/{id}',[LeadsController::class,'handle']);
+    Route::get('/email/compose/{id]',[EmailController::class,'compose'])->name('email.compose');
+    Route::get('/logout',function(){
+        auth()->logout();
+        return back();
+    })->name('logout');
 });
 
 Route::get('/login',[LoginController::class,'index'])->name('login');

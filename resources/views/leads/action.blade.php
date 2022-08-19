@@ -16,6 +16,7 @@
                     <div class="row pt-3" id="main-row">
                         <div class="col-xs-12 col-md-5">
                             <form action="{{ route('leads.action',$lead->id) }}" method="post">
+                                <p class="h5 text-muted">Leads Stages</p>
                                 @csrf
                                 <div class="btn-group">
                                     @foreach ($stages as $stage)
@@ -27,8 +28,46 @@
                                     </div>
                                     <input type="hidden" name="current" value="{{ $lead->current_stage }}">
                             </form>
+                            <hr>
+                            <form action="{{ route('leads.action',$lead->id) }}" method="post" class="datepickers pt-3">
+                                @csrf
+                                <p class="h5 text-muted">Schedule Contact Activity</p>
+                                <div class="form-group">
+                                    <label class="label-control mb-0 d-flex justify-content-between" for="id_start_datetime">
+                                        Schedule Entry(date/time)
+                                        @error('datetime')
+                                            <span class="text text-danger">{{$message}}</span>
+                                        @enderror
+                                    </label>
+                                    <div class="input-group date" id="pickdatetime">
+                                    <input type="text" name="datetime" value="{{old('datetime')}}" class="form-control @error('datetime') border-danger @enderror"/>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="form-label d-flex justify-content-between" style="margin-bottom: 0">
+                                        Select Activity To Schedule
+                                        @error('activity')
+                                            <span class="text text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </label>
+                                    <div>
+                                        <div class="btn-group" style="width: 100%">
+                                            <button type="submit" name="activity" value="call" class="btn btn-primary">Call</button>
+                                            <button type="submit" name="activity" value="email" class="btn btn-primary">Email</button>
+                                            <button type="submit" name="activity" value="meeting" class="btn btn-primary">Meeting</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <hr>
+                            <div class="form-group mb-3">
+                                <a href="{{ route('email.compose',$lead->id) }}" class="btn btn-primary form-control">
+                                    <i class="fa fa-envelope"></i> Send Email
+                                </a>
+                            </div>
                         </div>
                         <div class="col-xs-12 col-md-7">
+                            <p class="h5 text-muted">Manage Notes</p>
                             <div class="accordion" id="accordionContainer">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne">

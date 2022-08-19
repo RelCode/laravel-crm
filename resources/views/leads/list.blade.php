@@ -13,10 +13,10 @@
                             <a href="{{ route('leads.create') }}" class="btn btn-primary" title="Create New Lead"><i class="fa fa-plus"></i></a>  <a href="/trash" class="btn btn-danger" title="View Deleted Leads"><i class="fa fa-trash"></i></a>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="main-row">
                         @if ($leads->count() > 0)
                         <div class="table-responsive pt-3">
-                            <table class="table table-bordered table-stripped table-hover">
+                            <table class="table table-bordered table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>Names</th>
@@ -38,10 +38,10 @@
                                             <th>{{preg_replace('/(?<=\w)./', ' ', $lead->creator)}}</th>
                                             <th>{{$lead->current_stage}}</th>
                                             <th>
-                                                <a href="{{ route('leads.action',$lead->id) }}" class="btn btn-primary p-2"><i class="fa fa-cog"></i></a>
-                                                <a href="{{ route('leads.edit',$lead->id) }}" class="btn btn-warning p-2"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ route('leads.action',$lead->id) }}" class="btn btn-primary p-1"><i class="fa fa-cog"></i></a>
+                                                <a href="{{ route('leads.edit',$lead->id) }}" class="btn btn-warning p-1"><i class="fa fa-edit"></i></a>
                                                     @csrf
-                                                    <button type="button" data-user="{{$lead->id}}" class="btn btn-danger delete-lead p-2">
+                                                    <button type="button" data-user="{{$lead->id}}" class="btn btn-danger delete-lead p-1">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                             </th>

@@ -29,3 +29,32 @@ $(document).on('click','.delete-lead',function(event){
         }
     });
 })
+
+$('#pickdatetime').datetimepicker({
+    minDate: moment(),
+    allowInputToggle: true,
+    showClose: true,
+    showClear: true,
+    showTodayButton: true,
+    format: "MM/DD/YYYY hh:mm:ss A",
+    icons: {
+        time:'fa fa-clock',
+
+        date:'fa fa-calendar',
+
+        up:'fa fa-chevron-up',
+
+        down:'fa fa-chevron-down',
+
+        previous:'fa fa-chevron-left',
+
+        next:'fa fa-chevron-right',
+
+        today:'fa fa-chevron-up',
+
+        clear:'fa fa-trash',
+
+        close:'fa fa-times'
+        },
+
+});

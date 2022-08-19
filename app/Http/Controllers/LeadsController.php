@@ -160,6 +160,10 @@ class LeadsController extends Controller
             //handling the note taking function
             $this->handleNotes($request,$id);
             return back();
+        }elseif(isset($request->activity)){
+            //handling scheduling an activity
+            $this->handleActivity($request,$id);
+            return back();
         }else{
             Alert::error('error','invalid action');
             return back();
@@ -214,6 +218,34 @@ class LeadsController extends Controller
             return back();
         }
         $this->saveNotes($id,$request->title,$request->body);
+    }
+
+    public function handleActivity($request,$id){
+        $this->validate($request,[
+            'datetime' => 'required|date',
+            'activity' => 'required'
+        ]);
+        if(date('Y-m-d H:i:s', strtotime($request->datetime)) < date('Y-m-d H:i:s')){
+            Alert::warning('error','invalid time slot selected');
+            return back();
+        }
+        //check if the current user should be having this lead's ID
+        $lead = DB::table('leads')
+            ->where('id', $id)
+            ->where('owner', auth()->user()->id)
+            ->get();
+        if ($lead->count() == 0) {
+            Alert::warning('error', 'you don\'t have privileges to perform this action');
+            return back();
+        }
+        $schedule = DB::table('schedule')
+            ->insert(['creator' => auth()->user()->id,'lead' => $id, 'activity' => $request->activity . ' at ' . $request->datetime]);
+        if($schedule){
+            $this->saveNotes($id,'Activity Scheduled','You have set: <strong>'.$request->activity.'</strong> for <strong>'.$request->datetime.'</strong>');
+            Alert::success('done','you have created an activity to do with the lead');
+        }else{
+            Alert::error('error','action failed. try again');
+        }
     }
 
     public function saveNotes($id,$title,$body){
