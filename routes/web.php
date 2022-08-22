@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LeadsController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,12 @@ Route::group(['middleware' => 'auth'], function(){
     //================================== LEADS END HERE ==================================
 
     //============================== CUSTOMERS STARTS HERE ===============================
-    
+    Route::get('/customers',[CustomersController::class,'index'])->name('customers');
+    Route::get('/customers/create',[CustomersController::class,'create'])->name('customers.create');
+    Route::get('/provinces',[CustomersController::class,'fetchProvinces'])->name('provinces');
+    Route::get('/cities/{id}',[CustomersController::class,'fetchCities'])->name('cities/id');
+    Route::get('/customers/edit/{id}',[CustomersController::class,'edit'])->name('customers.edit');
+    Route::get('/customers/history/{id}',[CustomersController::class,'history'])->name('customers.history');
     //=============================== CUSTOMERS ENDS HERE ===============================
     Route::get('/logout',function(){
         auth()->logout();

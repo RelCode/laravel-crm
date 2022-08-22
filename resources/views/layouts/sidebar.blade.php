@@ -37,7 +37,7 @@
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="/customers">
+                <a class="nav-link" href="{{ route('customers') }}">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Customers</span>
                 </a>

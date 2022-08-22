@@ -38,6 +38,15 @@
         input[name="datetime"] {
             cursor: pointer;
         }
+        .dot {
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            top: -8px;
+            left: 17px;
+            background-color: red;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body class="mb-0 page-top">

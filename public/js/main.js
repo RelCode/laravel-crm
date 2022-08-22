@@ -5,7 +5,9 @@ var sideWidth = document.getElementsByClassName('sidebar')[0].clientWidth;
 
 // var mainContainer = document.querySelector('#crm-content-container');
 var container = document.querySelector('#crm-content-container').children[0].clientHeight;
-document.querySelector('#main-row').style.height = 'calc(100% - '+container+'px)';
+if(document.querySelector('#main-row')){
+    document.querySelector('#main-row').style.height = 'calc(100% - '+container+'px)';
+}
 // alert(document.getElementsByTagName('body')[0].offsetHeight);
 
 $(document).on('click','.delete-lead',function(event){
@@ -88,3 +90,47 @@ $('#pickdatetime').datetimepicker({
         },
 
 });
+
+$(document).ready(function(){
+    if(document.querySelector('#province')){
+        $.ajax({
+            type: 'GET',
+            url: '/provinces',
+            dataType: 'json',
+            success:function(response){
+                if(response.provinces.length == 9){
+                    var selectField = '<option>Select Customer Province</option>';
+                    response.provinces.map((province) => {
+                        selectField += '<option value="'+province.id+'">'+province.name+'</option>';
+                    })
+                }else{
+                    var selectField = '<option value="">No Province Available To Choose From</option>';
+                }
+                $('#province').html(selectField)
+            }
+        })
+    }
+    $(document).on('change','#province',function(){
+        var province = $(this).val();
+        if(province != ''){
+            $.ajax({
+                type: 'GET',
+                url: '/cities/'+province,
+                dataType: 'json',
+                success:function(response){
+                    if(response.cities != ''){
+                        var selectField = '<option>Select Customer City</option>';
+                        response.cities.map((city) => {
+                            selectField += '<option value="'+city.id+'">'+city.name+'</option>';
+                        })
+                    }else{
+                        var selectField = '<option>No Cities Found</option>';
+                    }
+                    $('#city').html(selectField)
+                }
+            })
+        }else{
+            $('#city').val('');
+        }
+    })
+})

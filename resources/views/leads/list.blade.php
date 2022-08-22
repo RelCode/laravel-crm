@@ -38,9 +38,10 @@
                                             <th>{{preg_replace('/(?<=\w)./', ' ', $lead->creator)}}</th>
                                             <th>{{$lead->current_stage}}</th>
                                             <th>
-                                                <a href="{{ route('leads.action',$lead->id) }}" class="btn btn-primary p-1"><i class="fa fa-cog"></i></a>
-                                                <a href="{{ route('leads.edit',$lead->id) }}" class="btn btn-warning p-1"><i class="fa fa-edit"></i></a>
-                                                    @csrf
+                                                @if ($lead->stage != '3')
+                                                    <a href="{{ route('leads.action',$lead->id) }}" class="btn btn-primary p-1"><i class="fa fa-cog"></i></a>
+                                                    <a href="{{ route('leads.edit',$lead->id) }}" class="btn btn-warning p-1"><i class="fa fa-edit"></i></a>
+                                                @endif
                                                     <button type="button" data-user="{{$lead->id}}" class="btn btn-danger delete-lead p-1">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
