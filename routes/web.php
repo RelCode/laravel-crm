@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/', function () {
         return view('home');
     })->name('/');
+    //================================= LEADS STARTS HERE =================================
     Route::get('/leads',[LeadsController::class,'index'])->name('leads');
     Route::get('/leads/create',[LeadsController::class,'create'])->name('leads.create');
     Route::post('/leads/create',[LeadsController::class,'store']);
@@ -31,6 +32,11 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/leads/action/{id}',[LeadsController::class,'action'])->name('leads.action');
     Route::post('/leads/action/{id}',[LeadsController::class,'handle']);
     Route::get('/email/compose/{id]',[EmailController::class,'compose'])->name('email.compose');
+    //================================== LEADS END HERE ==================================
+
+    //============================== CUSTOMERS STARTS HERE ===============================
+    
+    //=============================== CUSTOMERS ENDS HERE ===============================
     Route::get('/logout',function(){
         auth()->logout();
         return back();

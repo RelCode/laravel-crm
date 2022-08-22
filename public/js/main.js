@@ -30,6 +30,36 @@ $(document).on('click','.delete-lead',function(event){
     });
 })
 
+$(document).on('click','.confirm-stage',function(event){
+    event.preventDefault();
+    console.log(event)
+    let form = event.currentTarget.closest('form');
+    let item = document.getElementsByClassName('lead-name')[0].innerText;
+    new Swal({
+        title: 'you are moving ' +item+ ' from lead to customer...',
+        text: 'are you sure?',
+        icon: 'question',
+        showConfirmButton: true,
+        confirmButtonText: 'Yes',
+        confirmButtonColor: 'red',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if(result.isConfirmed){
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.value = 'confirm';
+            input.name = 'move_to_customer';
+            input.id = 'confirm-stage';
+            event.currentTarget.parentElement.append(input);
+            form.submit();
+        }else{
+            document.getElementById('confirm-stage').remove();
+        }
+    })
+    console.log(event.currentTarget.closest('form'))
+})
+
 $('#pickdatetime').datetimepicker({
     minDate: moment(),
     allowInputToggle: true,

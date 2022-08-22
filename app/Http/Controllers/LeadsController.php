@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customers;
 use App\Models\User;
 use App\Models\Leads;
 use App\Models\Notes;
@@ -156,6 +157,9 @@ class LeadsController extends Controller
             //handling stage update function
             $this->handleStageUpdate($request,$id);
             return back();
+        }elseif(isset($request->move_to_customer)){
+            $this->handleLeadToCustomer($request,$id);
+            return back();
         }elseif(isset($request->notes)){
             //handling the note taking function
             $this->handleNotes($request,$id);
@@ -199,6 +203,40 @@ class LeadsController extends Controller
             return true;
         }
         Alert::error('error', 'action failed. try again');
+        return false;
+    }
+
+    public function handleLeadToCustomer($request,$id){
+        //check if the current user should be having this lead's ID
+        $lead = DB::table('leads')
+            ->where('id', $id)
+            ->where('owner', auth()->user()->id)
+            ->get();
+        if ($lead->count() == 0) {
+            Alert::warning('error', 'you don\'t have privileges to perform this action');
+            return true;
+        }
+        //else update the lead
+        $affected = DB::table('leads')
+            ->where('id', $id)
+            ->where('owner', auth()->user()->id)
+            ->update(['stage' => '3']);
+        if ($affected == 0) {
+            Alert::error('error', 'updating lead stage failed. try again');
+            return false;
+        }
+        //take $lead basic info and insert into customers table
+        $customer = new Customers();
+        $customer->name = $lead[0]->names;
+        $customer->profession = $lead[0]->profession;
+        $customer->email = $lead[0]->email;
+        $customer->phone = $lead[0]->phone != '' ? $lead[0]->phone : 'N/A';
+        if($customer->save()){
+            $this->saveNotes($id, 'moved from lead to customer', $lead[0]->names . ' accepted the offer that I made and required we proceed to the item demoing phase');
+            Alert::success('done', $lead[0]->names . ' is now a customer');
+            return false;
+        }
+        Alert::error('error','lead conversion failed. try again');
         return false;
     }
 
