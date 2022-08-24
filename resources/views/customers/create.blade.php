@@ -39,10 +39,10 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-md-6">
                                             <div class="form-group mb-0">
-                                                <label for="email" class="form-label mb-0 d-flex justify-content-between">
-                                                    Email Address
+                                                <label for="email" class="form-label mb-0 d-flex justify-content-between text-overflow">
+                                                    Email
                                                     @error('email')
-                                                        <span class="text text-danger">{{ $message }}</span>
+                                                        <span class="text text-danger text-overflow">{{ $message }}</span>
                                                     @enderror
                                                 </label>
                                                 <input type="text" name="email" class="form-control @error('email') border-danger @enderror"
@@ -78,12 +78,12 @@
                                         <div class="col-xs-12 col-md-6">
                                             <div class="form-group mb-0">
                                                 <label for="province" class="form-label mb-0 d-flex justify-content-between">
-                                                    Select Province
+                                                    Province
                                                     @error('province')
-                                                        <span class="text text-danger">{{ $message }}</span>
+                                                        <span class="text text-danger text-overflow">{{ $message }}</span>
                                                     @enderror
                                                 </label>
-                                                <select name="province" id="province" class="form-control @error('province') @enderror">
+                                                <select name="province" id="province" class="form-control @error('province') border-danger @enderror">
                                                     <option value=""></option>
                                                 </select>
                                             </div>
@@ -91,12 +91,12 @@
                                         <div class="col-xs-12 col-md-6">
                                             <div class="form-group mb-0">
                                                 <label for="city" class="form-label mb-0 d-flex justify-content-between">
-                                                    Select City
+                                                    City
                                                     @error('city')
                                                         <span class="text text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </label>
-                                                <select name="city" id="city" class="form-control @error('city') @enderror">
+                                                <select name="city" id="city" class="form-control @error('city') border-danger @enderror">
                                                     <option value=""></option>
                                                 </select>
                                             </div>

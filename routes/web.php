@@ -40,7 +40,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/customers/create',[CustomersController::class,'create'])->name('customers.create');
     Route::get('/provinces',[CustomersController::class,'fetchProvinces'])->name('provinces');
     Route::get('/cities/{id}',[CustomersController::class,'fetchCities'])->name('cities/id');
+    Route::post('/customers/create',[CustomersController::class,'store']);
     Route::get('/customers/edit/{id}',[CustomersController::class,'edit'])->name('customers.edit');
+    Route::post('/customers/edit/{id}',[CustomersController::class,'update']);
     Route::get('/customers/history/{id}',[CustomersController::class,'history'])->name('customers.history');
     //=============================== CUSTOMERS ENDS HERE ===============================
     Route::get('/logout',function(){

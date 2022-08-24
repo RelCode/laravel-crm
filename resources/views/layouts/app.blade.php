@@ -47,6 +47,11 @@
             background-color: red;
             border-radius: 50%;
         }
+        .text-overflow {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body class="mb-0 page-top">

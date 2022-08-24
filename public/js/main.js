@@ -99,9 +99,15 @@ $(document).ready(function(){
             dataType: 'json',
             success:function(response){
                 if(response.provinces.length == 9){
-                    var selectField = '<option>Select Customer Province</option>';
+                    var selectField = '<option value="">Select Customer Province</option>';
                     response.provinces.map((province) => {
-                        selectField += '<option value="'+province.id+'">'+province.name+'</option>';
+                        if(document.querySelector('#current_province')){
+                            var current = document.querySelector('#current_province').value;
+                        }else{
+                            var current = '';
+                        }
+                        let selected = province.id == current ? 'selected' : '';
+                        selectField += '<option value="'+province.id+'" '+selected+'>'+province.name+'</option>';
                     })
                 }else{
                     var selectField = '<option value="">No Province Available To Choose From</option>';
